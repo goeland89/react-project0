@@ -8,65 +8,33 @@ const classNames = {
 const list = document.getElementById('todo-list');
 const itemCountSpan = document.getElementById('item-count');
 const uncheckedCountSpan = document.getElementById('unchecked-count');
-var itemCounter = 0;
-var uncheckCounter = 0;
 
 function newTodo() {
-  itemCounter ++;
-  uncheckCounter ++;
-  list.innerHTML = document.getElementById('todo-list').innerHTML +
-    '<li>NEW TODO ' +
-    '<input type="checkbox" class="todo-checkbox" onClick="Check()">' +
-    '<button class="todo-delete" onClick="Delete(' + itemCounter + ')">Delete</button></li>';
-  itemCountSpan.innerHTML = itemCounter;
-  uncheckedCountSpan.innerHTML = uncheckCounter;
-};
+  const newTodo = document.createElement('li');
+  newTodo.className = 'todo-list';
+  newTodo.innerHTML = 'TO DO';
 
-function Check(){
-  uncheckCounter = 0
-  var content = "";
-  var isChecked;
-  for (var i = 0; i < document.getElementsByClassName('todo-checkbox').length; i++) {
-    isChecked = document.getElementsByClassName('todo-checkbox')[i].checked;
-    if (isChecked == false) {
-      uncheckCounter ++
-      content = content +
-        '<li>NEW TODO ' +
-        '<input type="checkbox" class="todo-checkbox" onClick="Check()">' +
-        '<button class="todo-delete" onClick="Delete(' + i + ')">Delete</button></li>';
-    } else {
-      content = content +
-        '<li>NEW TODO ' +
-        '<input type="checkbox" class="todo-checkbox" onClick="Check()" checked>' +
-        '<button class="todo-delete" onClick="Delete(' + i + ')">Delete</button></li>';
-    }
-  }
-  list.innerHTML = content;
-  uncheckedCountSpan.innerHTML = uncheckCounter;
-};
+  const checkBox = document.createElement('input');
+  checkBox.type = 'checkbox';
+  checkBox.className = 'todo-checkbox';
+  newTodo.append(checkBox);
 
-function Delete(id){
-  itemCounter --;
-  uncheckCounter = 0
-  itemCountSpan.innerHTML = itemCounter;
-  var content = "";
-  var isChecked;
-  for (var i = 0; i < itemCounter + 1; i++) {
-    if (i == id) { continue }
-    isChecked = document.getElementsByClassName('todo-checkbox')[i].checked;
-    if (isChecked == false) {
-      uncheckCounter ++
-      content = content +
-        '<li>NEW TODO ' +
-        '<input type="checkbox" class="todo-checkbox" onClick="Check()">' +
-        '<button class="todo-delete" onClick="Delete(' + i + ')">Delete</button></li>';
-    } else {
-      content = content +
-        '<li>NEW TODO ' +
-        '<input type="checkbox" class="todo-checkbox" onClick="Check()" checked>' +
-        '<button class="todo-delete" onClick="Delete(' + i + ')">Delete</button></li>';
-    }
+  const deleteButton = document.createElement('button');
+  deleteButton.className = 'todo-delete';
+  deleteButton.innerHTML = 'Delete';
+  newTodo.append(deleteButton);
+
+  deleteButton.onclick = function() {
+    this.parentElement.remove();
+    itemCountSpan.innerHTML = document.getElementById('todo-list').childElementCount;
+    uncheckedCountSpan.innerHTML = document.getElementById('todo-list').childElementCount - document.querySelectorAll('input.todo-checkbox:checked').length;
+  };
+
+  checkBox.onclick = function() {
+    uncheckedCountSpan.innerHTML = document.getElementById('todo-list').childElementCount - document.querySelectorAll('input.todo-checkbox:checked').length;
   }
-  list.innerHTML = content;
-  uncheckedCountSpan.innerHTML = uncheckCounter;
+
+  document.getElementById('todo-list').append(newTodo);
+  itemCountSpan.innerHTML = document.getElementById('todo-list').childElementCount;
+  uncheckedCountSpan.innerHTML = document.getElementById('todo-list').childElementCount - document.querySelectorAll('input.todo-checkbox:checked').length;
 };
